@@ -5,7 +5,7 @@ function App() {
   const { displayNotification } = useNotification();
 
   return (
-    <div className='App'>
+    <div>
       <Component />
 
       {/* displayNotification is responsible for the jsx code */}
