@@ -1,23 +1,17 @@
-import logo from './logo.svg';
-import './App.css';
+import Component from './Component';
+import useNotification from './hooks/useNotification';
 
 function App() {
+  const { displayNotification } = useNotification();
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className='App'>
+      <Component />
+
+      {/* displayNotification is responsible for the jsx code */}
+      {/* call this function to render notifications on screen */}
+      {/* better to use it on a top level component or 'layout' component */}
+      {displayNotification()}
     </div>
   );
 }
