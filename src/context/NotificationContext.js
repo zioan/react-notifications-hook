@@ -1,26 +1,32 @@
-import { createContext, useState } from 'react';
+import { createContext, useState, useEffect } from 'react'
 
-const NotificationContext = createContext();
+const NotificationContext = createContext()
 
 export const NotificationProvider = ({ children }) => {
-  const [notificationArray, setNotificationArray] = useState([]);
+  const [notificationArray, setNotificationArray] = useState([])
 
-  const notificationLifespan = 3000; //time for active notification (ms)
+  const notificationLifespan = 3000 //time for active notification (ms)
 
   const addNotification = (newNotification) => {
-    setNotificationArray((prevState) => [...prevState, newNotification]);
-  };
+    setNotificationArray((prevState) => [...prevState, newNotification])
+    console.log('notification triggered')
+    setTimeout(() => {
+      setNotificationArray((prevState) =>
+        prevState.filter(
+          (notification) =>
+            Date.now() - notificationLifespan <= notification.createdAt,
+        ),
+      )
+    }, notificationLifespan)
+  }
 
-  setInterval(() => {
-    let notifications = notificationArray;
-    notifications.forEach(function (item) {
-      if (Date.now() - notificationLifespan > item.createdAt) {
-        setNotificationArray((prevState) =>
-          prevState.filter((notification) => notification !== item)
-        );
-      }
-    });
-  }, 1000);
+  useEffect(() => {
+    // cleanup function to clear the timeout when the component unmounts
+    return () =>
+      notificationArray.forEach((notification) =>
+        clearTimeout(notification.timeoutId),
+      )
+  }, [notificationArray])
 
   return (
     <NotificationContext.Provider
@@ -28,6 +34,7 @@ export const NotificationProvider = ({ children }) => {
     >
       {children}
     </NotificationContext.Provider>
-  );
-};
-export default NotificationContext;
+  )
+}
+
+export default NotificationContext
